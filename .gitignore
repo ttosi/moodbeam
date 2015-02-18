@@ -1,4 +1,6 @@
 /moodbeams-mobile/platforms
+/moodbeams-mobile/Web.Debug.config
+/moodbeams-mobile/Web.config
 /arduino/*
 !/arduino/MoodBeams.h
 !/arduino/MoodBeams.ino
