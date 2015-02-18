@@ -1,1 +1,0 @@
-Schematics, drawings and pictures.
