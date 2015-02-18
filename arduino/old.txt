@@ -1,0 +1,157 @@
+/*
+MoodBeams v0.1
+01/17/2015
+
+Tony S. Tosi
+ttosi519@gmail.com
+irc & github: ttosi
+twitter: tonytosi
+http://blog.turningdigital.com
+
+Button 1: Code Zone Mode
+BUtton 2: Daytime Mode
+BUtton 3: Nighttime Mode
+Button 4: On/Off
+Joystick:		 brighter
+					^
+					|
+cycle color left <--+--> cycle color right
+					|
+					v
+				 dimmer
+*/
+#include "MoodBeams.h"
+#include <Adafruit_NeoPixel.h>
+
+#define NUM_PIXELS 2
+#define STATUS_PIN 10
+#define PIXEL_CONTROL 13
+#define BUTTON_PIN A0
+
+#define JOYSTICK_H A1 
+#define JOYSTICK_V A2
+
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
+	NUM_PIXELS,
+	PIXEL_CONTROL,
+	NEO_GRB + NEO_KHZ800);
+
+uint32_t red = pixels.Color(255, 0, 0);
+uint32_t green = pixels.Color(0, 255, 0);
+uint32_t blue = pixels.Color(0, 0, 255);
+uint32_t yellow = pixels.Color(255, 255, 0);
+uint32_t black = pixels.Color(0, 0, 0);
+
+uint8_t redValue = 0;
+uint8_t greenValue = 0;
+uint8_t blueValue = 0;
+
+uint32_t colorValue = 0;
+uint32_t colorValueStep = 1;
+
+uint32_t currentColor = black;
+Button currentButton = NONE;
+Button lastButton = NONE;
+
+void setup()
+{
+	pinMode(BUTTON_PIN, INPUT_PULLUP);
+	Serial.begin(9600);
+
+	pixels.begin();
+	pixels.show();
+}
+
+void loop()
+{
+	uint16_t joyHorizontal = analogRead(JOYSTICK_H);
+	uint16_t joyVertical = analogRead(JOYSTICK_V);
+	if(joyHorizontal < 400)
+	{
+		colorValue += colorValueStep;
+		if(colorValue >= 255) {
+			colorValue = 0;
+		}
+	}
+	else if(joyHorizontal > 700)
+	{
+		colorValue -= colorValueStep;
+		if(colorValue <= 0) {
+			colorValue = 0;
+		}
+	}
+
+	setColor(pixels.Color(colorValue, 0, colorValue), 75);
+	Serial.println(colorValue);
+
+	
+	/*
+	currentButton = readButtons(BUTTON_PIN);
+	if(currentButton == lastButton)
+	{
+		currentColor = black;
+	}
+	else
+	{
+		switch (currentButton)
+		{
+			case ONE:
+				currentColor = red;
+				break;
+			case TWO:
+				currentColor = green;
+				break;
+			case THREE:
+				currentColor = blue;
+				break;
+			case FOUR:
+				currentColor = yellow;
+				break;
+			default:
+				break;
+		}
+
+		lastButton = currentButton;
+	}
+
+	setColor(currentColor, 255);
+	*/
+
+	delay(10);
+}
+
+Button readButtons(uint8_t inputPin) 
+{
+	uint16_t buttonValue = analogRead(inputPin);
+	Button buttonPressed = NONE;
+
+	if(buttonValue > 125 && buttonValue < 150)
+	{
+		buttonPressed = ONE;
+	}
+	else if(buttonValue > 100 && buttonValue < 125)
+	{
+		buttonPressed = TWO;
+	}
+	else if(buttonValue > 50 && buttonValue < 75)
+	{
+		buttonPressed = THREE;
+	}
+	else if(buttonValue > 0 && buttonValue < 25)
+	{
+		buttonPressed = FOUR;
+	}
+
+	return buttonPressed;
+}
+
+void setColor(uint32_t color, uint8_t brightness)
+{
+	for(int pixel = 0; pixel < NUM_PIXELS; pixel++)
+	{
+		pixels.setPixelColor(pixel, color);
+	}
+
+	pixels.setBrightness(brightness);
+	pixels.show();
+}
