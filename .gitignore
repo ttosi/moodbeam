@@ -1,4 +1,5 @@
 /moodbeams-mobile/platforms
-/arduino/Debug
-/arduino/Visual Micro
-/arduino/*.sdf
+/arduino/*
+!/arduino/MoodBeams.h
+!/arduino/MoodBeams.ino
+!/arduino/README.md
