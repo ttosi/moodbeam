@@ -1,1 +1,1 @@
-Source for the PhoneGap MoodBeams user interface.
+Source for MoodBeams user interfaces. Moodbeams-mobile is written using PhoneGap.
