@@ -1,0 +1,18 @@
+sudo apt-get install picocom
+sudo apt-get instal python-serial
+
+https://github.com/themadinventor/esptool
+https://github.com/4refr0nt/luatool
+https://github.com/nodemcu/nodemcu-firmware
+wget https://github.com/nodemcu/nodemcu-firmware/raw/master/pre_build/latest/nodemcu_latest.bin
+
+esptool/esptool.py --port /dev/ttyS2 --baud 9600 write_flash 0x000000 nodemcu_latest.bin
+https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en
+
+sudo gpio mode 1 out
+sudo gpio write 1 0 && gpio write 1 1
+
+./luatool.py --port /dev/ttyS2 --baud 9600 --src init.lua --dest init.lua --verbose
+./luatool.py --port /dev/ttyS2 --baud 9600 --src moodbeams.lua --dest moodbeams.lua --verbose
+
+picocom /dev/ttyS2 -omap crcrlf -b 9600
