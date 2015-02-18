@@ -1,6 +1,6 @@
-## Schematics, parts and assembly.
+### Schematics, parts and assembly.
 
-### Parts list
+#### Parts list
 * Ardunion Nano ATmega328 - 5v
 * ESP8266 ESP-01
 * 4 Channel Bi-Directional Logic Level Converter
