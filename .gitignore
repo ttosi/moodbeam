@@ -1,1 +1,4 @@
 /moodbeams-mobile/platforms
+/arduino/Debug
+/arduino/Visual Micro
+/arduino/*.sdf
