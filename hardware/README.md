@@ -2,7 +2,7 @@
 
 #### Parts list
 * Ardunion Nano ATMega328 5v
-* ESP8266 ESP-01
+* ESP8266 ESP-01 Serial Wifi Wireless Transceiver
 * 4 Channel Bi-Directional Logic Level Converter
 * Pololu Step-Down Voltage Regulator D15V35F5S3
 * 0.1" 2x4 crimp connector housing
