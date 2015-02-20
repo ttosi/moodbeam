@@ -1,4 +1,4 @@
-/moodbeams-mobile/platforms
-/moodbeams-mobile/Web.Debug.config
-/moodbeams-mobile/Web.config
+/mobile/platforms
+/mobile/Web.Debug.config
+/mobile/Web.config
 /esp8266/init.lua
