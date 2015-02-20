@@ -1,6 +1,6 @@
 ###Source for the ESP8266 ESP-01
 
-#####API
+API
 All parameters except for the cmd are bytes. Up to 4 paramters can be sent.
 /[cmd]/[p1]/[p2]/[p3]/[p4]
 
