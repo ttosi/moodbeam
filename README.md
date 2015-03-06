@@ -3,7 +3,7 @@ Arduino, ESP8266 ESP-01 and NeoPixel light bar. Uses a pair of neopixels mounted
 
 The original idea came from the fact that I needed a way to alert people when I was coding "in the zone" so I would, hopefully, be left alone. My plan was to just mount a couple of LEDs behind my LCD that would illuminate the wall red with a button click. The LEDs weren't bright enough to see during the day. Shining them through an acrylic rod with scores in it made the light more visible in bright conditions. The project grew into using different colors to indicate various moods I was in. Buttons became cumbersome so I added an ESP8266 and a mobile app that allows me to choose any color.
 
-![alt As a red beam](https://www.dropbox.com/sc/hffzal6mccylj0b/AABxQZv8-Hs2kDY0mSJYmX9aa)
+![alt As a red beam](https://raw.githubusercontent.com/ttosi/moodbeams/master/red_beam.jpg)
 
 ![alt As a blue beam](https://raw.githubusercontent.com/ttosi/moodbeams/master/blue_beam.jpg)
 
