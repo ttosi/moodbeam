@@ -18,5 +18,6 @@ __Initial Configuration__ (`config.lua` does not exist on the ESP8266's flash):
 __Normal Operation__ (`config.lua` exists on the ESP8266's flash):
    * Reads the ssid, ssid password, username & password from `config.lua`
    * Sets itself in station mode and connects to the home wifi network
-   * Makes a TCP connection to an external nodejs server sending the configured username and password
+   * Makes a TCP connection to the external nodejs server sending the configured username and password
+   * Sends a heartbeat byte to the server every hour(?) to keep the connection alive
 
