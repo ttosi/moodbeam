@@ -1,0 +1,10 @@
+{
+	"name": "Moodbeams",
+	"description": "Share a beam of light with someone",
+	"author": "Tony Tosi <ttosi519@gmail.com>",
+	"dependencies": {
+	},
+	"devDependencies": {
+	},
+	"engine": "node >= 0.4.1"
+}

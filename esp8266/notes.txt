@@ -1,0 +1,36 @@
+sudo apt-get install picocom
+sudo apt-get instal python-serial
+
+https://github.com/themadinventor/esptool
+https://github.com/4refr0nt/luatool
+https://github.com/nodemcu/nodemcu-firmware
+wget https://github.com/nodemcu/nodemcu-firmware/raw/master/pre_build/latest/nodemcu_latest.bin
+
+esptool/esptool.py --port /dev/ttyS2 --baud 9600 write_flash 0x000000 nodemcu_latest.bin
+https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en
+
+sudo gpio mode 1 out
+sudo gpio write 1 0 && gpio write 1 1
+
+picocom /dev/ttyS2 -omap crcrlf -b 9600
+
+~/luatool.py --port /dev/ttyS2 --baud 9600 --src init.lua --dest init.lua --verbose
+
+l = file.list() for k,v in pairs(l) do print(v .. " -- " .. k) end
+
+majorVer, minorVer, devVer, chipid, flashid, flashsize, flashmode, flashspeed = node.info();
+print("flashsize: " .. flashsize)
+
+file.open("config.lua", "r") print(file.readline()) file.close()
+
+f = file.open("debug.lua", "r") repeat line = file.readline() print(line) until line ~= nil
+
+while true do line = file.readline() if line == nil then break end print (line) end
+       
+file.open("debug.lua", "a+")
+file.writeline('testing')
+file.flush()
+file.close()
+
+file.remove("ap_mode.lua")
+
