@@ -42,20 +42,20 @@ server:listen(1503, function(conn)
 		params = parseCommand(cmd);
 		
 		if params ~= false then
-			if params[1] == "setcolor" and #params == 4 then
+			if params[1] == "showcolor" and #params == 4 then
 				writeSerialCommand({ 0xF0, params[2], params[3], params[4] })
 			elseif params[1] == "setbrightness" and #params == 2 then
 				writeSerialCommand({ 0xF1, params[2] })
-			elseif params[1] == "setpreset" and #params == 2 then
+			elseif params[1] == "showpreset" and #params == 2 then
 				writeSerialCommand({ 0xF2, params[2] })
 			elseif params[1] == "definepreset" and #params == 5 then
 				writeSerialCommand({ 0xF3, params[2], params[3], params[4], params[5] })
-			elseif params[1] == "alternatcolors" and #params == 5 then
-				writeSerialCommand({ 0xF4, params[2], params[3], params[4], params[5] })
-			elseif params[1] == "twocolor" and #params == 5 then
-				writeSerialCommand({ 0xF5, params[2], params[3], params[4], params[5] })
-			elseif params[1] == "flashcolor" and #params == 5 then
-				writeSerialCommand({ 0xF6, params[2], params[3], params[4], params[5] })
+			elseif params[1] == "alternatecolors" and #params == 4 then
+				writeSerialCommand({ 0xF4, params[2], params[3], params[4] })
+			elseif params[1] == "twocolor" and #params == 3 then
+				writeSerialCommand({ 0xF5, params[2], params[3] })
+			elseif params[1] == "flashcolor" and #params == 3 then
+				writeSerialCommand({ 0xF6, params[2], params[3] })
 			elseif params[1] == "showrainbow" and #params == 2 then
 				writeSerialCommand({ 0xF7, params[2] })
 			else
