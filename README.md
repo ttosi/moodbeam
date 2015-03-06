@@ -15,25 +15,25 @@ Some of this has not been written yet but here's the general idea of the process
 
 ### Moodbeam Controller
 __Initial Configuration for moodbeam controller__ (`config.lua` does not exist on the ESP8266's flash):
-   * Configures itself in AP mode
-   * User connects to the MOODBEAM AP and browses to 192.168.4.1
-   * The ESP module returns a webpage where an SSID and password of the home network are entered (also an email and password that is used by the external node server)
-   * ESP module writes the information to `config.lua` and resets itself
-   * User recconects to their home network
+* Configures itself in AP mode
+* User connects to the MOODBEAM AP and browses to 192.168.4.1
+* The ESP module returns a webpage where an SSID and password of the home network are entered (also an email and password that is used by the external node server)
+* ESP module writes the information to `config.lua` and resets itself
+* User recconects to their home network
    
 __Normal Operation for moodbeam controller__ (`config.lua` exists on the ESP8266's flash):
-   * Reads the ssid, ssid password, username & password from `config.lua`
-   * Sets itself in station mode and connects to the home wifi network
-   * Makes a TCP connection to the external nodejs server sending the configured username and password which is registered on the server
-   * Sends a heartbeat byte to the server every hour(?) to keep the connection alive
+* Reads the ssid, ssid password, username & password from `config.lua`
+* Sets itself in station mode and connects to the home wifi network
+* Makes a TCP connection to the external nodejs server sending the configured username and password which is registered on the server
+* Sends a heartbeat byte to the server every hour(?) to keep the connection alive
    
 ### Server
 __Initial User Setup__ 
-    * _Before_ a user configures a moodbeam they must have created an account
-    * User creates account: email address & password
-    * Confirm email account
-    * Send email which contains instructions and a link to the AP (so they don't have to type in an IP address)
-    * Configures as described above
+* _Before_ a user configures a moodbeam they must have created an account
+* User creates account: email address & password
+* Confirm email account
+* Send email which contains instructions and a link to the AP (so they don't have to type in an IP address)
+* Configures as described above
 
 __Normal User Opertation__
     * A phonegap app or a web ui can be used to control the moodbeam from anywhere
