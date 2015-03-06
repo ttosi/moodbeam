@@ -1,5 +1,5 @@
 wifi.setmode(wifi.STATION)
 --wifi.sta.config("CTRLH","3216549870")
-wifi.sta.config("COLUMBIAVIEW","j3nny$int3rnet")
+wifi.sta.config("SSID","PASS")
 
 dofile("moodbeams.lua")
