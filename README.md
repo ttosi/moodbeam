@@ -8,16 +8,16 @@ Some of this has not been written yet but here's the general idea of the process
 
 (todo: insert diagram)
 
-__Initial Configuration__ (`config.lua` does not exist on the ESP8266's flash):
+__Initial Configuration for moodbeam controller__ (`config.lua` does not exist on the ESP8266's flash):
    * Configures itself in AP mode
    * User connects to the MOODBEAM AP and browses to 192.168.4.1
-   * The ESP module returns a webpage where an SSID and password of the home network is entered (also an email and password that is used by the external node server)
+   * The ESP module returns a webpage where an SSID and password of the home network are entered (also an email and password that is used by the external node server)
    * ESP module writes the information to `config.lua` and resets itself
    * User recconects to their home network
    
-__Normal Operation__ (`config.lua` exists on the ESP8266's flash):
+__Normal Operation for moodbeam controller__ (`config.lua` exists on the ESP8266's flash):
    * Reads the ssid, ssid password, username & password from `config.lua`
    * Sets itself in station mode and connects to the home wifi network
-   * Makes a TCP connection to the external nodejs server sending the configured username and password
+   * Makes a TCP connection to the external nodejs server sending the configured username and password which is registered on the server
    * Sends a heartbeat byte to the server every hour(?) to keep the connection alive
 
