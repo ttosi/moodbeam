@@ -8,10 +8,14 @@ Some of this has not been written yet but here's the general idea of the process
 
 (todo: insert diagram)
 
-* On powering up the moodbeam controller checks for the exisitence of `config.lua`.
+* On powering up the moodbeam controller checks for the existence of `config.lua`.
     * If `config.lua` _does not_ exist
         * Configures itself in AP mode
-        * Connect to the MOODBEAM AP and browse to 192.168.4.1
-        * A web page is returned where an SSID and password of the home network is entered (also an email and password that is used by the external node server)
+        * User connects to the MOODBEAM AP and browses to 192.168.4.1
+        * The ESP module returns a where an SSID and password of the home network is entered (also an email and password that is used by the external node server)
         * ESP module writes the information to `config.lua` and resets itself
-    * If `config.lua` does 
+    * If `config.lua` _does_ exist
+        * Reads the ssid, ssid password, username & password from `config.lua`
+        * Sets itself in station mode and connects to the home wifi network
+        * Makes a TCP connection to an external nodejs server sending the configured username and password
+
