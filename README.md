@@ -36,4 +36,4 @@ __Initial User Setup__
 * Configures as described above
 
 __Normal User Opertation__
-    * A phonegap app or a web ui can be used to control the moodbeam from anywhere
+* A phonegap app or a web ui can be used to control the moodbeam from anywhere
