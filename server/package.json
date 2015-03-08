@@ -1,10 +1,10 @@
 {
-	"name": "Moodbeams",
-	"description": "Share a beam of light with someone",
-	"author": "Tony Tosi <ttosi519@gmail.com>",
-	"dependencies": {
-	},
-	"devDependencies": {
-	},
-	"engine": "node >= 0.4.1"
+  "name": "Moodbeams",
+  "description": "Share a beam of light with someone",
+  "author": "Tony Tosi <ttosi519@gmail.com>",
+  "dependencies": {
+    "express": "~4.12.2"
+  },
+  "devDependencies": {},
+  "engine": "node >= 0.4.1"
 }
