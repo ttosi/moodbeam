@@ -1,5 +1,6 @@
 //-----------------------------------
-//	MoodBeams v0.2
+//	moodbeam v0.2
+//	https://github.com/ttosi/moodbeam
 //	01/17/2015
 //
 //	Tony S. Tosi
@@ -9,12 +10,11 @@
 //	http://blog.turningdigital.com
 //------------------------------------
 
-#include "MoodBeams.h"
-#include <SoftwareSerial.h>
+#include "moodbeam.h"
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 
-byte command[5];
+byte cmd[5];
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
 	NUM_PIXELS,
@@ -37,40 +37,47 @@ void loop()
 	{
 		for (int i = 0; i < 5; i++) 
 		{
-			command[i] = Serial.read();
+			cmd[i] = Serial.read();
 		}
 
-		switch (command[0])
+		switch (cmd[0])
 		{
-			case SET_COLOR:
-				setColor(command[1], command[2], command[3]);
+			case SHOW_COLOR:
+				setColor(cmd[1], cmd[2], cmd[3], 0);
 				break;
 			case SET_BRIGHTNESS:
-				setBrightness(command[1]);
+				setBrightness(cmd[1]);
 				break;
-			case SET_PRESET:
-				setPreset(command[1]);
+			case ALTERNATE_COLORS:
 				break;
-			case DEFINE_PRESET:
-				definePreset(command[1], command[2], command[3], command[4]);
+			case TWO_COLOR:
+				break;
+			case FLASH_COLOR:
 				break;
 			case SHOW_RAINBOW:
-				showRainbow(command[1]);
+				showRainbow(cmd[1]);
 				break;
 		}
 	}
 
-	if(command[0] == SHOW_RAINBOW)
+	if(cmd[0] == SHOW_RAINBOW)
 	{
-		showRainbow(command[1]);
+		showRainbow(cmd[1]);
 	}
 
 	delay(100);
 }
 
-void setColor(byte r, byte g, byte b)
+void setColor(byte r, byte g, byte b, int pixel)
 {
-	for(int pixel = 0; pixel < NUM_PIXELS; pixel++)
+	if(pixel == 0) 
+	{
+		for(int index = 0; pixel < NUM_PIXELS; index++)
+		{
+			pixels.setPixelColor(index, r, g, b);
+		}
+	}
+	else
 	{
 		pixels.setPixelColor(pixel, r, g, b);
 	}
@@ -84,23 +91,16 @@ void setBrightness(byte brightness)
 	pixels.show();
 }
 
-void setPreset(byte address)
+void alternateColors(int address1, int address2, byte delay)
 {
-	byte r = EEPROM.read(address);
-	byte g = EEPROM.read(++address);
-	byte b = EEPROM.read(++address);
-
-	setColor(r, g, b);
 }
 
-void definePreset(int address, byte r, byte g, byte b)
+void twoColor(int address, int address2)
 {
-	EEPROM.write(address, r);
-	EEPROM.write(++address, g);
-	EEPROM.write(++address, b);
+}
 
-	flashColor(4, r, g, b);
-	setColor(r, g, b);
+void flashColor(int address, byte delay)
+{
 }
 
 void showRainbow(byte wait)
@@ -124,10 +124,10 @@ void flashColor(int flashes, byte r, byte g, byte b)
 {
 	for(int i = 0; i < flashes; i++) 
 	{
-		setColor(r, g, b);
+		setColor(r, g, b, 0);
 		delay(125);
 
-		setColor(0, 0, 0);
+		setColor(0, 0, 0, 0);
 		delay(75);
 	}
 }

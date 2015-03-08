@@ -1,6 +1,6 @@
 {
   "name": "Moodbeams",
-  "description": "Share a beam of light with someone",
+  "description": "Share a beam of light with someone.",
   "author": "Tony Tosi <ttosi519@gmail.com>",
   "dependencies": {
     "express": "~4.12.2"

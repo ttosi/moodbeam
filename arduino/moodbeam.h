@@ -1,5 +1,6 @@
 //-----------------------------------
-//	MoodBeams v0.2
+//	moodbeam v0.2
+//	https://github.com/ttosi/moodbeam
 //	01/17/2015
 //
 //	Tony S. Tosi
@@ -12,8 +13,9 @@
 #define NUM_PIXELS 2
 #define PIXEL_CONTROL_PIN A4
 
-#define SET_COLOR 0xFA
-#define SET_BRIGHTNESS 0xFB
-#define SET_PRESET 0xFC
-#define DEFINE_PRESET 0xFD
-#define SHOW_RAINBOW 0xFE
+#define SHOW_COLOR 0xF0
+#define SET_BRIGHTNESS 0xF1
+#define ALTERNATE_COLORS 0xF4
+#define TWO_COLOR 0xF5
+#define FLASH_COLOR 0xF6
+#define SHOW_RAINBOW 0xF7

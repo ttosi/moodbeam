@@ -2,3 +2,4 @@
 /mobile/Web.Debug.config
 /mobile/Web.config
 /esp8266/init.lua
+/server/node_modules
