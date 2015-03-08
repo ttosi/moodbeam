@@ -91,25 +91,6 @@ void setBrightness(byte brightness)
 	pixels.show();
 }
 
-void setPreset(byte address)
-{
-	byte r = EEPROM.read(address);
-	byte g = EEPROM.read(++address);
-	byte b = EEPROM.read(++address);
-
-	setColor(r, g, b, 0);
-}
-
-void definePreset(int address, byte r, byte g, byte b)
-{
-	EEPROM.write(address, r);
-	EEPROM.write(++address, g);
-	EEPROM.write(++address, b);
-
-	flashColor(4, r, g, b);
-	setColor(r, g, b, 0);
-}
-
 void alternateColors(int address1, int address2, byte delay)
 {
 }

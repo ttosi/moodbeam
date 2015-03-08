@@ -14,8 +14,6 @@
 
 #define SHOW_COLOR 0xF0
 #define SET_BRIGHTNESS 0xF1
-#define SHOW_PRESET 0xF2
-#define DEFINE_PRESET 0xF3
 #define ALTERNATE_COLORS 0xF4
 #define TWO_COLOR 0xF5
 #define FLASH_COLOR 0xF6
