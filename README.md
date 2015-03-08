@@ -7,11 +7,7 @@ The original idea came from the fact that I needed a way to alert people when I 
 
 ![alt As a blue beam](https://raw.githubusercontent.com/ttosi/moodbeam/master/blue_beam.jpg)
 
-## General Architecture
-Some of this has not been written yet but here's the general idea of the process flow a user would do to setup and use the moodbeam.
-
-(todo: insert diagram)
-
+## Overall Architecture
 
 ### Moodbeam Controller
 __Initial Configuration for moodbeam controller__ (`config.lua` does not exist on the ESP8266's flash):
