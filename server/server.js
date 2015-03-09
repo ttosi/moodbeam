@@ -1,12 +1,8 @@
-var net = require('net');
-var http = require('http');
-var util = require('util');
-var clients = [];
-var url = require("url");
-var queryString = require("querystring");
-
-var express = require('express')
-var app = express()
+var net = require('net'),
+	express = require('express'),
+	clients = [];
+	
+var app = express();
 
 app.all('/*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -15,56 +11,30 @@ app.all('/*', function(req, res, next) {
 });
 
 app.post('/', function (req, res) {
-	// res.set({
-		// 'Content-Type': 'text/plain',
-		// 'Content-Length': 5,
-		// 'Access-Control-Allow-Origin': '*'
-	// });
+	var body = '';
 	
-	res.send("hello");
-
-	var body = "";
 	req.on('data', function(data) {
 		body += data;
 	});
 	
 	req.on('end', function() {
-		var cmd = JSON.parse(body);
-		//console.dir(cmd);
-		console.log(cmd.command.colors[1].g);
-		//console.log(cmd.colors[1].g);
+		var request = JSON.parse(body);
+		var command = parseCommand(request);
+		
+		if(clients[request.username] !== undefined && command !== undefined) {
+			console.log(request.username + '=' + command);
+			clients[request.username].socket.write(command);
+		}
 	})
 })
 
 var server = app.listen(1338, function () {
-  console.log("http server running");
+  console.log('http server running');
 })
-
-// http.createServer(function (req, res) {
-	// res.writeHead(200, { 'Content-Type': 'text/plain' });
-	// res.end('Command sent');
-	
-	//var requestUrl = url.parse(req.url);
-	// var data = queryString.parse(url.parse(req.url).query);
-	// console.log(data);
-	// console.log(data.username);
-	// console.log(data.command['name']);
-	// console.log(data.command.color[0].r);
-	//var command = parseCommand(
-	
-	//var cmd = req.url.substring(1).split('/');
-	//var user = cmd.shift();
-	
-	// if(client[user] !== undefined) {
-		// console.log("command from: " + user + " = " + cmd.join(':'))
-		// clients[user].socket.write(cmd.join(':'));
-	// }
-// }).listen(1338, 'turningdigital.com');
-// console.log("http server running");
 
 net.createServer(function (socket) {
 	socket.on('data', function(data) {
-		data += "";
+		data += '';
 		var params = data.split(':');
 		
 		if(params[0] !== 'keepalive') {
@@ -75,14 +45,19 @@ net.createServer(function (socket) {
 			};
 			
 			clients[params[0]] = client;
-			console.log("connection from: " + params[0]);
-		} else {
-			console.log("keepalive from " + params[1] + " on " + Date());
+			console.log('connection from: ' + params[0]);
 		}
 	});
 }).listen(1337);
-console.log("tcp server running");
+console.log('tcp server running');
 
 var parseCommand = function(cmd) {
+	var command = cmd.command.name + ':';
+	var colors = [];
 	
+	for(var i in cmd.command.colors) {
+		colors = colors.concat(cmd.command.colors[i]);
+	}
+	
+	return command += colors.join(':');
 };
