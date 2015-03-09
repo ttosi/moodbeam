@@ -1,6 +1,6 @@
 {
   "name": "moodbeam",
-  "version": 0.1.0,
+  "version": "0.1.0",
   "description": "Share a beam of light with someone.",
   "author": "Tony Tosi <ttosi519@gmail.com>",
   "dependencies": {
