@@ -1,8 +1,19 @@
 var net = require('net'),
 	express = require('express'),
-	clients = [];
+	moment = require('moment'),
+	stringformat = require('string_format');
 	
-var app = express();
+var app = express(),
+	clients = [];
+
+var availbleCommands = [
+	'showcolor',
+	'setbrightness',
+	'alternatecolors',
+	'twocolor',
+	'flashcolor',
+	'showrainbow'
+];
 
 app.all('/*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -19,11 +30,11 @@ app.post('/', function (req, res) {
 	
 	req.on('end', function() {
 		var request = JSON.parse(body);
-		var command = parseCommand(request);
+		var command = parseCommand(request.command);
 		
-		if(clients[request.username] !== undefined && command !== undefined) {
-			console.log(request.username + '=' + command);
-			clients[request.username].socket.write(command);
+		if(clients[request.user] !== undefined && command !== undefined) {
+			writeLog(request.user + ' = ' + command);
+			clients[request.user].socket.write(command);
 		}
 	})
 })
@@ -36,28 +47,54 @@ net.createServer(function (socket) {
 	socket.on('data', function(data) {
 		data += '';
 		var params = data.split(':');
-		
-		if(params[0] !== 'keepalive') {
-			var client = {
-				user: params[0],
-				password: params[1],
-				socket: socket
-			};
 			
-			clients[params[0]] = client;
-			console.log('connection from: ' + params[0]);
+		var client = {
+			user: params[0],
+			password: params[1],
+			socket: socket
+		};
+		
+		if(params[1] !== 'keepalive') {
+			clients[client.user] = client;
+			writeLog('{0} connected'.format(client.user));
+		} else {
+			if(!clients[client.user]) {
+				clients[client.user] = client;
+				writeLog('{0} reconnected'.format(client.user));
+			}
 		}
 	});
 }).listen(1337);
 console.log('tcp server running');
 
 var parseCommand = function(cmd) {
-	var command = cmd.command.name + ':';
-	var colors = [];
+	var command = '',
+		isValid = true;
 	
-	for(var i in cmd.command.colors) {
-		colors = colors.concat(cmd.command.colors[i]);
+	if(availbleCommands.indexOf(cmd.name) >= 0) {
+		var colors = [];
+		command = cmd.name + ':';
+		
+		for(var i in cmd.colors) {
+			if(cmd.colors[i].every(function(e) { return e >= 0 && e <= 255; })) {
+				colors = colors.concat(cmd.colors[i]);
+			} else {
+				isValid = false;
+			}
+		}
+		command += colors.join(':');
+	} else {
+		isValid = false;
 	}
 	
-	return command += colors.join(':');
+	return isValid ? command : undefined;
+};
+
+var writeLog = function(text) {
+	var entry = '[{0}] {1}'.format(
+		moment().format('MM/DD/YYYY HH:mm:ss'),
+		text
+	);
+	
+	console.log(entry);
 };
