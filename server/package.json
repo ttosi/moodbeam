@@ -3,8 +3,14 @@
   "version": "0.1.0",
   "description": "Share a beam of light with someone.",
   "author": "Tony Tosi <ttosi519@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ttosi/moodbeam.git"
+  },
   "dependencies": {
-    "express": "~4.12.2"
+    "express": "~4.12.2",
+    "moment": "~2.9.0",
+    "string_format": "0.0.4"
   },
   "devDependencies": {},
   "engine": "node >= 0.4.1"
