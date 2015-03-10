@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Moodbeam Web</title>
+	<title>Moodbeams Web</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 	<style>
 		body { margin: 25px; text-align: center; }
@@ -10,17 +10,53 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/jquery.tinycolorpicker.min.js"></script>
 	<script type="text/javascript" src="src/index.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var data = {
+				user: "ttosi519@gmail.com",
+				command: {
+					name: "",
+					colors: [],
+					delay: 0
+				}
+			};
+			
+			$(document).on('click', 'button', function() {
+				data.command.name = $(this).attr('data-command');
+				data.command.colors = [];
+				
+				var colors = $(this).attr('colors').split(',');
+				
+				for(var i in colors) {
+					data.command.colors.push(colors[i].split(':'));
+				}
+				
+				$.ajax({
+					url: 'http://tdc2.turningdigital.com:1338/',
+					type: 'POST',
+					dataType: 'json',
+					data: JSON.stringify(data),
+					done: function(data, status, xhr) {
+						console.log('done');
+					}
+				});
+			});
+		})
+	</script>
 </head>
 <body>
 	<ul>
-		<button data-command="/showcolor/255/0/0">RED</button><br /><br />
-		<button data-command="/showcolor/0/0/255">BLUE</button><br /><br />
-		<button data-command="/showcolor/0/255/0">GREEN</button><br /><br />
-		<button data-command="/showcolor/255/255/0">YELLOW</button><br /><br />
-		<button data-command="/showcolor/255/0/255">PURPLE</button><br /><br />
-		<button data-command="/showcolor/0/255/255">CYAN</button><br /><br />
-		<button data-command="/showcolor/255/255/255">WHITE</button><br /><br />
-		<button data-command="/showcolor/0/0/0">BLACK</button><br /><br />
+		<button data-command="showcolor" colors="255:0:0">RED</button><br /><br />
+		<button data-command="showcolor" colors="216:0:115">MAGENTA</button><br /><br />
+		<button data-command="showcolor" colors="0:0:255">BLUE</button><br /><br />
+		<button data-command="showcolor" colors="0:171:169">TEAL</button><br /><br />
+		<button data-command="showcolor" colors="0:255:0">GREEN</button><br /><br />
+		<button data-command="showcolor" colors="227:200:0">YELLOW</button><br /><br />
+		<button data-command="showcolor" colors="250:104:0">ORANGE</button><br /><br />
+		<button data-command="showcolor" colors="255:0:255">PURPLE</button><br /><br />
+		<button data-command="showcolor" colors="0:255:255">CYAN</button><br /><br />
+		<button data-command="showcolor" colors="255:255:255">WHITE</button><br /><br />
+		<button data-command="showcolor" colors="0:0:0">BLACK</button><br /><br />
 		<button data-command="/showrainbow/8">RAINBOW!</button><br /><br />
 	</ul>
 </body>

@@ -9,14 +9,14 @@ end
 
 uart.setup(0, 9600, 8, 0, 1, 0)
 conn=net.createConnection(net.TCP, 0) 
-conn:connect(1337, "turningdigital.com")
+conn:connect(1337, "tdc2.turningdigital.com")
 
 conn:on("connection", function(conn)
 	conn:send(u..":"..p)
 end)
 
 tmr.alarm(1, 300000, 1, function()
-	conn:send(..u..":keepalive")
+	conn:send(u..":keepalive")
 end)
 
 conn:on("receive", function(conn, data)
