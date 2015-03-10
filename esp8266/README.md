@@ -5,12 +5,12 @@
 
 ~~/[cmd]/[p1]/[p2]/[p3]/[p4]~~
 
-~~* /showcolor/r/g/b~~
-~~* /setbrightness/a~~
-~~* /showpreset/preset~~
-~~* /definepreset/preset/r/g/b~~
-~~* /alternatecolors/preset1/preset2/delay~~
-~~* /twocolor/preset1/preset2~~
-~~* /flashcolor/preset/delay~~
-~~* /showrainbow/delay~~
+* ~~/showcolor/r/g/b~~
+* ~~/setbrightness/a~~
+* ~~/showpreset/preset~~
+* ~~/definepreset/preset/r/g/b~~
+* ~~/alternatecolors/preset1/preset2/delay~~
+* ~~/twocolor/preset1/preset2~~
+* ~~/flashcolor/preset/delay~~
+* ~~/showrainbow/delay~~
 
