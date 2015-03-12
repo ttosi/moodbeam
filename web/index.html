@@ -8,7 +8,6 @@
 		button { width: 200px; height: 50px; }
 	</style>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/jquery.tinycolorpicker.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
 			var data = {
@@ -54,8 +53,11 @@
 		<button data-command="showcolor" colors="250:104:0">ORANGE</button><br /><br />
 		<button data-command="showcolor" colors="255:0:255">PURPLE</button><br /><br />
 		<button data-command="showcolor" colors="0:255:255">CYAN</button><br /><br />
+		<button data-command="twocolor" colors="255:0:0:0:0:255">RED/BLUE</button><br /><br />
+		<button data-command="twocolor" colors="0:0:255:0:255:0">GREEN/BLUE</button><br /><br />
+		<button data-command="twocolor" colors="255:0:0:0:255:0">RED/GREEN</button><br /><br />
 		<button data-command="showcolor" colors="255:255:255">WHITE</button><br /><br />
-		<button data-command="showcolor" colors="0:0:0">BLACK</button><br /><br />
+		<button data-command="showcolor" colors="0:0:0">OFF</button><br /><br />
 		<button data-command="/showrainbow/8">RAINBOW!</button><br /><br />
 	</ul>
 </body>
