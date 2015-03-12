@@ -36,36 +36,39 @@ app.post('/', function (req, res) {
 			writeLog(request.user + ' = ' + command);
 			clients[request.user].socket.write(command);
 		}
-	})
-})
+		
+		res.sendStatus(200);
+	});
+});
 
 var server = app.listen(1338, function () {
   console.log('http server running');
-})
+});
 
 net.createServer(function (socket) {
 	socket.on('data', function(data) {
 		data += '';
-		var params = data.split(':');
-			
-		var client = {
-			user: params[0],
-			password: params[1],
-			socket: socket
-		};
+		var params = data.split(':'),
+			username = params[0];
 		
-		if(params[1] !== 'keepalive') {
-			clients[client.user] = client;
-			writeLog('{0} connected'.format(client.user));
-		} else {
-			if(!clients[client.user]) {
-				clients[client.user] = client;
-				writeLog('{0} reconnected'.format(client.user));
+		if(params[1] === 'heartbeat') {
+			if(clients[username]) {
+				socket.write('ACK');
 			}
+		} else {
+			var client = {
+				username: username,
+				password: params[1],
+				socket: socket
+			};
+			
+			clients[client.username] = client;
+			writeLog('{0} connected'.format(client.username));
 		}
 	});
-}).listen(1337);
-console.log('tcp server running');
+}).listen(1337, function() {
+	console.log('tcp server running');
+});
 
 var parseCommand = function(cmd) {
 	var command = '',
