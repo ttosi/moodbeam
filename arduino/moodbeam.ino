@@ -14,7 +14,7 @@
 #include <EEPROM.h>
 #include <Adafruit_NeoPixel.h>
 
-byte cmd[5];
+String cmd;
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
 	NUM_PIXELS,
@@ -29,34 +29,40 @@ void setup()
 
 	pixels.begin();
 	pixels.show();
+	
+	cmd.reserve(64);
 }
 
 void loop()
 {
-	if (Serial.available() >= 5) 
+	if (Serial.available() > 0) 
 	{
-		for (int i = 0; i < 5; i++) 
-		{
-			cmd[i] = Serial.read();
-		}
+		char data = (char)Serial.read();
+		cmd += data;
 
-		switch (cmd[0])
-		{
-			case SHOW_COLOR:
-				setColor(cmd[1], cmd[2], cmd[3], 0);
-				break;
-			case SET_BRIGHTNESS:
-				setBrightness(cmd[1]);
-				break;
-			case ALTERNATE_COLORS:
-				break;
-			case TWO_COLOR:
-				break;
-			case FLASH_COLOR:
-				break;
-			case SHOW_RAINBOW:
-				showRainbow(cmd[1]);
-				break;
+		if(data == 0x0A) {
+			switch (cmd[0])
+			{
+				case (char)SHOW_COLOR:
+					setColor(cmd[1], cmd[2], cmd[3], -1);
+					break;
+				case (char)SET_BRIGHTNESS:
+					setBrightness(cmd[1]);
+					break;
+				case (char)TWO_COLOR:
+					setColor(cmd[1], cmd[2], cmd[3], 0);
+					setColor(cmd[4], cmd[5], cmd[6], 1);
+					break;
+				case (char)ALTERNATE_COLORS:
+					break;
+				case (char)FLASH_COLOR:
+					break;
+				case (char)SHOW_RAINBOW:
+					showRainbow(cmd[1]);
+					break;
+			}
+			
+			cmd = "";
 		}
 	}
 
@@ -70,11 +76,11 @@ void loop()
 
 void setColor(byte r, byte g, byte b, int pixel)
 {
-	if(pixel == 0) 
+	if(pixel == -1) 
 	{
-		for(int index = 0; pixel < NUM_PIXELS; index++)
+		for(int i = 0; i < NUM_PIXELS; i++)
 		{
-			pixels.setPixelColor(index, r, g, b);
+			pixels.setPixelColor(i, r, g, b);
 		}
 	}
 	else
@@ -91,15 +97,11 @@ void setBrightness(byte brightness)
 	pixels.show();
 }
 
-void alternateColors(int address1, int address2, byte delay)
+void alternateColors()
 {
 }
 
-void twoColor(int address, int address2)
-{
-}
-
-void flashColor(int address, byte delay)
+void flashColor()
 {
 }
 
@@ -117,18 +119,6 @@ void showRainbow(byte wait)
 
 		pixels.show();
 		delay(wait);
-	}
-}
-
-void flashColor(int flashes, byte r, byte g, byte b)
-{
-	for(int i = 0; i < flashes; i++) 
-	{
-		setColor(r, g, b, 0);
-		delay(125);
-
-		setColor(0, 0, 0, 0);
-		delay(75);
 	}
 }
 
