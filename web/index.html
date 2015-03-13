@@ -5,7 +5,7 @@
 	<style>
 		body { margin: 25px; text-align: center; }
 		li { cursor: pointer; }
-		button { width: 200px; height: 50px; }
+		button { width: 250px; height: 50px; }
 	</style>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript">
@@ -43,25 +43,32 @@
 	</script>
 </head>
 <body>
-	<ul>
-		<button data-command="showcolor" data-params="255:0:0">RED</button><br /><br />
-		<button data-command="showcolor" data-params="216:0:115">MAGENTA</button><br /><br />
-		<button data-command="showcolor" data-params="0:0:255">BLUE</button><br /><br />
-		<button data-command="showcolor" data-params="0:171:169">TEAL</button><br /><br />
-		<button data-command="showcolor" data-params="0:255:0">GREEN</button><br /><br />
-		<button data-command="showcolor" data-params="227:200:0">YELLOW</button><br /><br />
-		<button data-command="showcolor" data-params="250:104:0">ORANGE</button><br /><br />
-		<button data-command="showcolor" data-params="255:0:255">PURPLE</button><br /><br />
-		<button data-command="showcolor" data-params="0:255:255">CYAN</button><br /><br />
-		<button data-command="twocolor" data-params="255:0:0:0:0:255">RED/BLUE</button><br /><br />
-		<button data-command="twocolor" data-params="0:0:255:0:255:0">GREEN/BLUE</button><br /><br />
-		<button data-command="twocolor" data-params="255:0:0:0:255:0">RED/GREEN</button><br /><br />
-		<button data-command="flashcolor" data-params="255:0:0:1">FLASH RED</button><br /><br />
-		<button data-command="alternatecolors" data-params="255:0:0:0:0:255:2">ALTERNATE RED/BLUE</button><br /><br />
-		<button data-command="fade" data-params="255:0:255:100">FADE PURPLE</button><br /><br />
-		<button data-command="showcolor" data-params="255:255:255">WHITE</button><br /><br />
-		<button data-command="showcolor" data-params="0:0:0">OFF</button><br /><br />
-		<button data-command="showrainbow" data-params="50">RAINBOW!</button><br /><br />
-	</ul>
+	<table>
+		<tr>
+			<td>
+				<button data-command="showcolor" data-params="255:0:0">RED</button><br /><br />
+				<button data-command="showcolor" data-params="216:0:115">MAGENTA</button><br /><br />
+				<button data-command="showcolor" data-params="0:0:255">BLUE</button><br /><br />
+				<button data-command="showcolor" data-params="0:171:169">TEAL</button><br /><br />
+				<button data-command="showcolor" data-params="0:255:0">GREEN</button><br /><br />
+				<button data-command="showcolor" data-params="227:200:0">YELLOW</button><br /><br />
+				<button data-command="showcolor" data-params="250:104:0">ORANGE</button><br /><br />
+				<button data-command="showcolor" data-params="255:0:255">PURPLE</button><br /><br />
+				<button data-command="showcolor" data-params="0:255:255">CYAN</button><br /><br />
+			</td>
+			<td>&nbsp;&nbsp;&nbsp;</td>
+			<td>
+				<button data-command="twocolor" data-params="255:0:0:0:0:255">RED/BLUE</button><br /><br />
+				<button data-command="twocolor" data-params="0:0:255:0:255:0">GREEN/BLUE</button><br /><br />
+				<button data-command="twocolor" data-params="255:0:0:0:255:0">RED/GREEN</button><br /><br />
+				<button data-command="flashcolor" data-params="1">FLASH</button><br /><br />
+				<button data-command="alternatecolors" data-params="255:0:0:0:0:255:2">ALTERNATE RED/BLUE</button><br /><br />
+				<button data-command="fade" data-params="15">FADE</button><br /><br />
+				<button data-command="showrainbow" data-params="50">RAINBOW!</button><br /><br />
+				<button data-command="showcolor" data-params="255:255:255">WHITE</button><br /><br />
+				<button data-command="showcolor" data-params="0:0:0">OFF</button><br /><br />
+			</td>
+		</tr>
+	</table>
 </body>
 </html>
