@@ -12,7 +12,8 @@ var availbleCommands = [
 	'alternatecolors',
 	'twocolor',
 	'flashcolor',
-	'showrainbow'
+	'showrainbow',
+	'fade'
 ];
 
 app.all('/*', function(req, res, next) {
