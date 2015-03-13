@@ -9,12 +9,18 @@
 //	twitter: tonytosi
 //	http://blog.turningdigital.com
 //------------------------------------
-
-#include "moodbeam.h"
-#include <EEPROM.h>
+#include <ThreadController.h>
+#include <Thread.h>
+#include <TimerOne.h>
 #include <Adafruit_NeoPixel.h>
+#include "moodbeam.h"
 
-String cmd;
+
+
+ThreadController controller = ThreadController();
+Thread flashColorThread = Thread();
+Thread alternateColorsThread = Thread();
+Thread fadeThread = Thread();
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
 	NUM_PIXELS,
@@ -22,65 +28,140 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
 	NEO_GRB + NEO_KHZ800
 );
 
+String cmd;
+
+byte colorOne[3];
+byte colorTwo[3];
+byte fadeBrightness;
+
+bool isFlashColor = false;
+bool isColorOne = false;
+bool rainbowRunning = false;
+bool isFadingDown = true;
+
 void setup()
 {
+	flashColorThread.onRun(flashColor);
+	flashColorThread.enabled = false;
+	
+	alternateColorsThread.onRun(alternateColors);
+	alternateColorsThread.enabled = false;
+
+	fadeThread.onRun(fade);
+	fadeThread.enabled = false;
+
+	controller.add(&flashColorThread);
+	controller.add(&alternateColorsThread);
+	controller.add(&fadeThread);
+	
 	delay(2000);
 	Serial.begin(9600);
 
 	pixels.begin();
 	pixels.show();
 	
-	cmd.reserve(64);
+	Timer1.initialize(5000);
+	Timer1.attachInterrupt(timerCallback);
+	Timer1.start();
 }
 
 void loop()
 {
-	if (Serial.available() > 0) 
-	{
-		char data = (char)Serial.read();
-		cmd += data;
-
-		if(data == 0x0A) {
-			switch (cmd[0])
-			{
-				case (char)SHOW_COLOR:
-					setColor(cmd[1], cmd[2], cmd[3], -1);
-					break;
-				case (char)SET_BRIGHTNESS:
-					setBrightness(cmd[1]);
-					break;
-				case (char)TWO_COLOR:
-					setColor(cmd[1], cmd[2], cmd[3], 0);
-					setColor(cmd[4], cmd[5], cmd[6], 1);
-					break;
-				case (char)ALTERNATE_COLORS:
-					break;
-				case (char)FLASH_COLOR:
-					break;
-				case (char)SHOW_RAINBOW:
-					showRainbow(cmd[1]);
-					break;
-			}
-			
-			cmd = "";
-		}
-	}
-
-	if(cmd[0] == SHOW_RAINBOW)
-	{
-		showRainbow(cmd[1]);
-	}
-
-	delay(100);
+	readCommand();
 }
 
-void setColor(byte r, byte g, byte b, int pixel)
+void readCommand() 
+{
+	while (!Serial.available());
+
+	delay(25);
+
+	while(Serial.available()) 
+	{
+		if (Serial.available() > 0) 
+		{
+			char data = (char)Serial.read();
+			cmd += data;
+
+			if(data == 0x0A) {
+
+				flashColorThread.enabled = false;
+				alternateColorsThread.enabled = false;
+				fadeThread.enabled = false;
+
+				setBrightness(255);
+
+				switch (cmd[0])
+				{
+					case (char)SHOW_COLOR:
+						setColor(-1, cmd[1], cmd[2], cmd[3]);
+						break;
+
+					case (char)SET_BRIGHTNESS:
+						setBrightness(cmd[1]);
+						break;
+
+					case (char)TWO_COLOR:
+						setColor(0, cmd[1], cmd[2], cmd[3]);
+						setColor(1, cmd[4], cmd[5], cmd[6]);
+						break;
+
+					case (char)ALTERNATE_COLORS:
+						colorOne[0] = cmd[1];
+						colorOne[1] = cmd[2];
+						colorOne[2] = cmd[3];
+
+						colorTwo[0] = cmd[4];
+						colorTwo[1] = cmd[5];
+						colorTwo[2] = cmd[6];
+
+						alternateColorsThread.setInterval(cmd[7] * 100);
+						alternateColorsThread.enabled = true;
+						break;
+
+					case (char)FLASH_COLOR:
+						colorOne[0] = cmd[1];
+						colorOne[1] = cmd[2];
+						colorOne[2] = cmd[3];
+
+						flashColorThread.setInterval(cmd[4] * 100);
+						flashColorThread.enabled = true;
+						break;
+
+					case (char)SHOW_RAINBOW:
+						showRainbow(cmd[1]);
+						break;
+
+					case (char)FADE:
+						setColor(-1, cmd[1], cmd[2], cmd[3]);
+						fadeBrightness = 255;
+						isFadingDown = true;
+
+						Serial.println(cmd[4] * 1);
+
+						fadeThread.setInterval(cmd[4] * 1);
+						fadeThread.enabled = true;
+						break;
+				}
+			
+				cmd = "";
+			}
+		}
+	}
+}
+
+void timerCallback()
+{
+	controller.run();
+}
+
+void setColor(int pixel, byte r, byte g, byte b)
 {
 	if(pixel == -1) 
 	{
-		for(int i = 0; i < NUM_PIXELS; i++)
+		for(int pix = 0; pix < NUM_PIXELS; pix++)
 		{
-			pixels.setPixelColor(i, r, g, b);
+			pixels.setPixelColor(pix, r, g, b);
 		}
 	}
 	else
@@ -97,12 +178,57 @@ void setBrightness(byte brightness)
 	pixels.show();
 }
 
-void alternateColors()
-{
-}
-
 void flashColor()
 {
+	if(isFlashColor) 
+	{
+		setColor(-1, colorOne[0], colorOne[1], colorOne[2]);
+	}
+	else
+	{
+		setColor(-1, 0, 0, 0);
+	}
+
+	isFlashColor = !isFlashColor;
+}
+
+void alternateColors()
+{
+	if(isColorOne)
+	{
+		setColor(0, colorOne[0], colorOne[1], colorOne[2]);
+		setColor(1, colorTwo[0], colorTwo[1], colorTwo[2]);
+	}
+	else
+	{
+		setColor(1, colorOne[0], colorOne[1], colorOne[2]);
+		setColor(0, colorTwo[0], colorTwo[1], colorTwo[2]);
+	}
+
+	isColorOne = !isColorOne;
+}
+
+void fade()
+{
+	if(isFadingDown)
+	{
+		fadeBrightness -= 3;
+		if(fadeBrightness <= 5)
+		{
+			isFadingDown = false;
+		}
+	}
+	else
+	{
+		fadeBrightness += 3;
+		if(fadeBrightness >= 250)
+		{
+			isFadingDown = true;
+		}
+	}
+
+	Serial.println(fadeBrightness);
+	setBrightness(fadeBrightness);
 }
 
 void showRainbow(byte wait)

@@ -19,3 +19,4 @@
 #define TWO_COLOR 0xF3
 #define FLASH_COLOR 0xF4
 #define SHOW_RAINBOW 0xF5
+#define FADE 0xF6
