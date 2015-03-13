@@ -15,12 +15,11 @@
 #include <Adafruit_NeoPixel.h>
 #include "moodbeam.h"
 
-
-
 ThreadController controller = ThreadController();
 Thread flashColorThread = Thread();
 Thread alternateColorsThread = Thread();
 Thread fadeThread = Thread();
+Thread rainbowThread = Thread();
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
 	NUM_PIXELS,
@@ -29,14 +28,14 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(
 );
 
 String cmd;
-
 byte colorOne[3];
 byte colorTwo[3];
 byte fadeBrightness;
+int rainbowCounter;
 
 bool isFlashColor = false;
 bool isColorOne = false;
-bool rainbowRunning = false;
+bool isRainbowRunning = false;
 bool isFadingDown = true;
 
 void setup()
@@ -50,9 +49,13 @@ void setup()
 	fadeThread.onRun(fade);
 	fadeThread.enabled = false;
 
+	rainbowThread.onRun(showRainbow);
+	rainbowThread.enabled = false;
+
 	controller.add(&flashColorThread);
 	controller.add(&alternateColorsThread);
 	controller.add(&fadeThread);
+	controller.add(&rainbowThread);
 	
 	delay(2000);
 	Serial.begin(9600);
@@ -60,7 +63,7 @@ void setup()
 	pixels.begin();
 	pixels.show();
 	
-	Timer1.initialize(5000);
+	Timer1.initialize(10000);
 	Timer1.attachInterrupt(timerCallback);
 	Timer1.start();
 }
@@ -74,78 +77,76 @@ void readCommand()
 {
 	while (!Serial.available());
 
-	delay(25);
+	delay(5);
 
 	while(Serial.available()) 
 	{
-		if (Serial.available() > 0) 
-		{
-			char data = (char)Serial.read();
-			cmd += data;
+		char data = (char)Serial.read();
+		cmd += data;
 
-			if(data == 0x0A) {
+		if(data == 0x0A) {
 
-				flashColorThread.enabled = false;
-				alternateColorsThread.enabled = false;
-				fadeThread.enabled = false;
+			flashColorThread.enabled = false;
+			alternateColorsThread.enabled = false;
+			fadeThread.enabled = false;
+			rainbowThread.enabled = false;
+				
+			setBrightness(255);
 
-				setBrightness(255);
+			switch (cmd[0])
+			{
+				case (char)SHOW_COLOR:
+					colorOne[0] = cmd[1];
+					colorOne[1] = cmd[2];
+					colorOne[2] = cmd[3];
 
-				switch (cmd[0])
-				{
-					case (char)SHOW_COLOR:
-						setColor(-1, cmd[1], cmd[2], cmd[3]);
-						break;
+					setColor(-1, cmd[1], cmd[2], cmd[3]);
+					break;
 
-					case (char)SET_BRIGHTNESS:
-						setBrightness(cmd[1]);
-						break;
+				case (char)SET_BRIGHTNESS:
+					setBrightness(cmd[1]);
+					break;
 
-					case (char)TWO_COLOR:
-						setColor(0, cmd[1], cmd[2], cmd[3]);
-						setColor(1, cmd[4], cmd[5], cmd[6]);
-						break;
+				case (char)TWO_COLOR:
+					setColor(0, cmd[1], cmd[2], cmd[3]);
+					setColor(1, cmd[4], cmd[5], cmd[6]);
+					break;
 
-					case (char)ALTERNATE_COLORS:
-						colorOne[0] = cmd[1];
-						colorOne[1] = cmd[2];
-						colorOne[2] = cmd[3];
+				case (char)ALTERNATE_COLORS:
+					colorOne[0] = cmd[1];
+					colorOne[1] = cmd[2];
+					colorOne[2] = cmd[3];
 
-						colorTwo[0] = cmd[4];
-						colorTwo[1] = cmd[5];
-						colorTwo[2] = cmd[6];
+					colorTwo[0] = cmd[4];
+					colorTwo[1] = cmd[5];
+					colorTwo[2] = cmd[6];
 
-						alternateColorsThread.setInterval(cmd[7] * 100);
-						alternateColorsThread.enabled = true;
-						break;
+					alternateColorsThread.setInterval(cmd[7] * 50);
+					alternateColorsThread.enabled = true;
+					break;
 
-					case (char)FLASH_COLOR:
-						colorOne[0] = cmd[1];
-						colorOne[1] = cmd[2];
-						colorOne[2] = cmd[3];
+				case (char)FLASH_COLOR:
+					flashColorThread.setInterval(cmd[1] * 50);
+					flashColorThread.enabled = true;
+					break;
 
-						flashColorThread.setInterval(cmd[4] * 100);
-						flashColorThread.enabled = true;
-						break;
+				case (char)SHOW_RAINBOW:
+					rainbowCounter = 0;
 
-					case (char)SHOW_RAINBOW:
-						showRainbow(cmd[1]);
-						break;
+					rainbowThread.setInterval(cmd[1] * 1);
+					rainbowThread.enabled = true;
+					break;
 
-					case (char)FADE:
-						setColor(-1, cmd[1], cmd[2], cmd[3]);
-						fadeBrightness = 255;
-						isFadingDown = true;
+				case (char)FADE:
+					fadeBrightness = 255;
+					isFadingDown = true;
 
-						Serial.println(cmd[4] * 1);
-
-						fadeThread.setInterval(cmd[4] * 1);
-						fadeThread.enabled = true;
-						break;
-				}
-			
-				cmd = "";
+					fadeThread.setInterval(cmd[1] * 1);
+					fadeThread.enabled = true;
+					break;
 			}
+			
+			cmd = "";
 		}
 	}
 }
@@ -227,28 +228,26 @@ void fade()
 		}
 	}
 
-	Serial.println(fadeBrightness);
 	setBrightness(fadeBrightness);
 }
 
-void showRainbow(byte wait)
+void showRainbow()
 {
-	uint16_t i;
-	uint16_t j;
-
-	for(j = 0; j < 256 * 5; j++) 
+	rainbowCounter++;
+	if(rainbowCounter >= 256 * 5)
 	{
-		for(i = 0; i < pixels.numPixels(); i++) 
-		{
-			pixels.setPixelColor(i, Wheel(( i + j) & 255));
-		}
-
-		pixels.show();
-		delay(wait);
+		rainbowCounter = 0;
 	}
+
+	for(int i = 0; i < pixels.numPixels(); i++) 
+	{
+		pixels.setPixelColor(i, Wheel(( i + rainbowCounter) & 255));
+	}
+
+	pixels.show();
 }
 
-uint32_t Wheel(byte WheelPos) 
+uint16_t Wheel(byte WheelPos) 
 {
 	WheelPos = 255 - WheelPos;
 
