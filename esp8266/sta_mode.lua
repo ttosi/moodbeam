@@ -39,11 +39,11 @@ conn:on("receive", function(conn, data)
 			elseif params[1] == "twocolor" then
 				writeSerialCommand({ 0xF3, params[2], params[3], params[4], params[5], params[6], params[7] })
 			elseif params[1] == "flashcolor" then
-				writeSerialCommand({ 0xF4, params[2], params[3], params[4], params[5] })
+				writeSerialCommand({ 0xF4, params[2] })
 			elseif params[1] == "showrainbow" then
 				writeSerialCommand({ 0xF5, params[2] })
 			elseif params[1] == "fade" then
-				writeSerialCommand({ 0xF6, params[2], params[3], params[4], params[5] })
+				writeSerialCommand({ 0xF6, params[2] })
 			end
 		end
 	end

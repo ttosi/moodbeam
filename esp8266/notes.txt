@@ -32,5 +32,5 @@ file.writeline('testing')
 file.flush()
 file.close()
 
-file.remove("ap_mode.lua")
+file.remove("config.lua")
 
