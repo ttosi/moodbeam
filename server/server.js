@@ -4,7 +4,6 @@ var net = require('net'),
 	stringformat = require('string_format');
 	
 var app = express(),
-	webhook = require('express-ifttt-webhook'),
 	clients = [];
 
 var availbleCommands = [
@@ -16,8 +15,6 @@ var availbleCommands = [
 	'showrainbow',
 	'fade'
 ];
-
-app.use(webhook());
 
 app.all('/*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
