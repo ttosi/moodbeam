@@ -12,22 +12,18 @@
 		$(function() {
 			var data = {
 				user: "ttosi519@gmail.com",
-				command: {
-					name: "",
-					colors: [],
-					delay: 0
-				}
+				command: ""
 			};
 			
 			$(document).on('click', 'button', function() {
-				data.command.name = $(this).attr('data-command');
-				data.command.colors = [];
+				data.command = $(this).attr('data-command');
+				//data.command.colors = [];
 				
-				var colors = $(this).attr('data-params').split(',');
+				//var colors = $(this).attr('data-params').split(',');
 				
-				for(var i in colors) {
-					data.command.colors.push(colors[i].split(':'));
-				}
+				//for(var i in colors) {
+				//	data.command.colors.push(colors[i].split(':'));
+				//}
 				
 				$.ajax({
 					url: 'http://tdc2.turningdigital.com:1338/',
@@ -46,27 +42,27 @@
 	<table>
 		<tr>
 			<td>
-				<button data-command="showcolor" data-params="255:0:0">RED</button><br /><br />
-				<button data-command="showcolor" data-params="216:0:115">MAGENTA</button><br /><br />
-				<button data-command="showcolor" data-params="0:0:255">BLUE</button><br /><br />
-				<button data-command="showcolor" data-params="0:171:169">TEAL</button><br /><br />
-				<button data-command="showcolor" data-params="0:255:0">GREEN</button><br /><br />
-				<button data-command="showcolor" data-params="227:200:0">YELLOW</button><br /><br />
-				<button data-command="showcolor" data-params="250:104:0">ORANGE</button><br /><br />
-				<button data-command="showcolor" data-params="255:0:255">PURPLE</button><br /><br />
-				<button data-command="showcolor" data-params="0:255:255">CYAN</button><br /><br />
+				<button data-command="showcolor:255:0:0">RED</button><br /><br />
+				<button data-command="showcolor:216:0:115">MAGENTA</button><br /><br />
+				<button data-command="showcolor:0:0:255">BLUE</button><br /><br />
+				<button data-command="showcolor:0:171:169">TEAL</button><br /><br />
+				<button data-command="showcolor:0:255:0">GREEN</button><br /><br />
+				<button data-command="showcolor:227:200:0">YELLOW</button><br /><br />
+				<button data-command="showcolor:250:104:0">ORANGE</button><br /><br />
+				<button data-command="showcolor:255:0:255">PURPLE</button><br /><br />
+				<button data-command="showcolor:0:255:255">CYAN</button><br /><br />
 			</td>
 			<td>&nbsp;&nbsp;&nbsp;</td>
 			<td>
-				<button data-command="twocolor" data-params="255:0:0:0:0:255">RED/BLUE</button><br /><br />
-				<button data-command="twocolor" data-params="0:0:255:0:255:0">GREEN/BLUE</button><br /><br />
-				<button data-command="twocolor" data-params="255:0:0:0:255:0">RED/GREEN</button><br /><br />
-				<button data-command="flashcolor" data-params="1">FLASH</button><br /><br />
-				<button data-command="alternatecolors" data-params="255:0:0:0:0:255:2">ALTERNATE RED/BLUE</button><br /><br />
-				<button data-command="fade" data-params="15">FADE</button><br /><br />
-				<button data-command="showrainbow" data-params="50">RAINBOW!</button><br /><br />
-				<button data-command="showcolor" data-params="255:255:255">WHITE</button><br /><br />
-				<button data-command="showcolor" data-params="0:0:0">OFF</button><br /><br />
+				<button data-command="twocolor:255:0:0:0:0:255">RED/BLUE</button><br /><br />
+				<button data-command="twocolor:0:0:255:0:255:0">GREEN/BLUE</button><br /><br />
+				<button data-command="twocolor:255:0:0:0:255:0">RED/GREEN</button><br /><br />
+				<button data-command="flash:10">FLASH</button><br /><br />
+				<button data-command="alternatecolors:255:0:0:0:0:255:5">ALTERNATE RED/BLUE</button><br /><br />
+				<button data-command="alternatecolors:255:0:255:0:255:0:5">ALTERNATE PURPLE/GREEN</button><br /><br />
+				<button data-command="fade:15">FADE</button><br /><br />
+				<button data-command="showcolor:255:255:255">WHITE</button><br /><br />
+				<button data-command="showcolor:0:0:0">OFF</button><br /><br />
 			</td>
 		</tr>
 	</table>

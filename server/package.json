@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "express": "~4.12.2",
-    "express-ifttt-webhook": "^0.2.3",
     "moment": "~2.9.0",
     "string_format": "0.0.4"
   },

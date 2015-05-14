@@ -1,3 +1,5 @@
+uart.setup(0, 9600, 8, 0, 1, 0)
+
 if file.open("config.lua", "r") then
 	settings = file.readline()
 	file.close()
