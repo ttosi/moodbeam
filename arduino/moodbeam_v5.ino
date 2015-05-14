@@ -15,23 +15,15 @@ ThreadController controller = ThreadController();
 Thread flashColorThread = Thread();
 Thread alternateColorsThread = Thread();
 Thread fadeThread = Thread();
-Thread rainbowThread = Thread();
 
 byte buffer[16];
-bool toggle = false;
 byte fadeBrightness;
-int rainbowCounter;
-bool isFlashColor = false;
-bool isColorOne = false;
-bool isRainbowRunning = false;
+bool toggle = false;
 bool isFadingDown = true;
 
 RGB color1;
 RGB color2;
 RGB off = { 0, 0, 0 };
-RGB green = { 0, 255, 0 };
-RGB red = { 255, 0, 0 };
-
 
 ISR(TIMER0_COMPA_vect)
 {
@@ -54,13 +46,9 @@ void setup()
 	fadeThread.onRun(fade);
 	fadeThread.enabled = false;
 
-	rainbowThread.onRun(showRainbow);
-	rainbowThread.enabled = false;
-
 	controller.add(&flashColorThread);
 	controller.add(&alternateColorsThread);
 	controller.add(&fadeThread);
-	controller.add(&rainbowThread);
 
 	pixels.begin();
 	pixels.show();
@@ -82,17 +70,51 @@ void loop()
 
 		if(buffer[i] == 0x0A)
 		{
-			color1.r = buffer[1];
-			color1.g = buffer[2];
-			color1.b = buffer[3];
+			byte command = buffer[0];
 
-			switch (buffer[0])
+			flashColorThread.enabled = false;
+			alternateColorsThread.enabled = false;
+			fadeThread.enabled = false;
+			setBrightness(255);
+
+			if(command != FLASH) 
+			{
+				color1.r = buffer[1];
+				color1.g = buffer[2];
+				color1.b = buffer[3];
+
+				color2.r = buffer[4];
+				color2.g = buffer[5];
+				color2.b = buffer[6];
+			}
+
+			switch (command)
 			{
 				case SHOW_COLOR:
 					setColor(-1, color1);
 					break;
+
 				case TWO_COLOR:
-					setColor(-1, off);
+					setColor(0, color1);
+					setColor(1, color2);
+					break;
+
+				case ALTERNATE_COLORS:
+					alternateColorsThread.setInterval(buffer[7] * 50);
+					alternateColorsThread.enabled = true;
+					break;
+				
+				case FLASH:
+					flashColorThread.setInterval(buffer[1] * 50);
+					flashColorThread.enabled = true;
+					break;
+
+				case FADE:
+					fadeBrightness = 255;
+					toggle = true;
+
+					fadeThread.setInterval(buffer[1] * 1);
+					fadeThread.enabled = true;
 					break;
 			}
 		}
@@ -128,7 +150,8 @@ void flashColor()
 {
 	if(toggle) 
 	{
-		setColor(-1, red);
+		setColor(0, color1);
+		setColor(1, color2);
 	}
 	else
 	{
@@ -174,40 +197,4 @@ void fade()
 	}
 
 	setBrightness(fadeBrightness);
-}
-
-void showRainbow()
-{
-	rainbowCounter++;
-	if(rainbowCounter >= 256 * 5)
-	{
-		rainbowCounter = 0;
-	}
-
-	for(int i = 0; i < pixels.numPixels(); i++) 
-	{
-		pixels.setPixelColor(i, Wheel(( i + rainbowCounter) & 255));
-	}
-
-	pixels.show();
-}
-
-uint16_t Wheel(byte WheelPos) 
-{
-	WheelPos = 255 - WheelPos;
-
-	if(WheelPos < 85) 
-	{
-		return pixels.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-	}
-	else if(WheelPos < 170) 
-	{
-		WheelPos -= 85;
-		return pixels.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-	}
-	else 
-	{
-		WheelPos -= 170;
-		return pixels.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-	}
 }
