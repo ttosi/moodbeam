@@ -9,6 +9,9 @@ conn:on("receive", function(conn, data)
 	if data ~= nill then
 		if data == "ACK" then
 			tmr.stop(2)
+		elseif data == "RESET" then
+			file.remove("config.lua")
+			node.restart()
 		else
 			for param in string.gmatch(data, "(%w+)") do
 				uart.write(0, string.char(param))
@@ -23,7 +26,7 @@ end)
 --	seconds, restart (which reconnects to the server).
 tmr.alarm(1, 300000, 1, function()
 	conn:send(u .. ":heartbeat")
-	tmr.alarm(2, 15000, 1, function()
+	tmr.alarm(2, 15000, 0, function()
 		node.restart()
 	end)
 end)
