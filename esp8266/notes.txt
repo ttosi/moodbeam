@@ -6,6 +6,8 @@ https://github.com/4refr0nt/luatool
 https://github.com/nodemcu/nodemcu-firmware
 wget https://github.com/nodemcu/nodemcu-firmware/raw/master/pre_build/latest/nodemcu_latest.bin
 
+--> esptool.py --port /dev/ttyS2 write_flash -fm qio -fs 4m 0x00000 build.bin 0x7c000 esp_init_data_default.bin (512K ESPs)
+
 esptool/esptool.py --port /dev/ttyS2 --baud 9600 write_flash 0x000000 nodemcu_latest.bin
 https://github.com/nodemcu/nodemcu-firmware/wiki/nodemcu_api_en
 
